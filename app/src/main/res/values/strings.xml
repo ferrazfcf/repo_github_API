@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Repo github API</string>
+    <string name="user_image_description">%1$s avatar image!</string>
+    <string name="users_list_header">Github Users\n</string>
+    <string name="reset">RESET</string>
+    <string name="search_user_placeholder">Search user</string>
+    <string name="search">Search</string>
 </resources>
