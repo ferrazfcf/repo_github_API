@@ -1,18 +1,18 @@
 package ferrazfcf.repo_github_api.users_list_and_search.presentation
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ferrazfcf.repo_github_api.core.util.CoroutineDispatchers
-import ferrazfcf.repo_github_api.core.util.Resource
+import ferrazfcf.repo_github_api.R
+import ferrazfcf.repo_github_api.core.domain.GithubRequestException
+import ferrazfcf.repo_github_api.core.util.coroutines.CoroutineDispatchers
+import ferrazfcf.repo_github_api.core.util.data.Resource
 import ferrazfcf.repo_github_api.users_list_and_search.domain.user_item.UserItem
 import ferrazfcf.repo_github_api.users_list_and_search.domain.user_list.GetUserList
 import ferrazfcf.repo_github_api.users_list_and_search.domain.user_list.GetUserListByName
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -26,9 +26,7 @@ class UsersListAndSearchViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(UsersListAndSearchState())
-    val state: StateFlow<UsersListAndSearchState> = _state.onEach {
-        Log.d("FCF_TEST", it.toString())
-    }.stateIn(
+    val state: StateFlow<UsersListAndSearchState> = _state.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000),
         UsersListAndSearchState()
@@ -41,7 +39,7 @@ class UsersListAndSearchViewModel @Inject constructor(
     fun onEvent(event: UsersListAndSearchEvent) {
         when (event) {
             is UsersListAndSearchEvent.ChangeSearchText -> _state.update { state ->
-                state.copy(searchName = event.user)
+                state.copy(searchName = event.login)
             }
             UsersListAndSearchEvent.ClearSearchText -> _state.update { state ->
                 state.copy(searchName = "")
@@ -62,7 +60,8 @@ class UsersListAndSearchViewModel @Inject constructor(
             _state.update { state ->
                 state.copy(
                     searchName = "",
-                    isLoading = true
+                    isLoading = true,
+                    performedSearch = false
                 )
             }
 
@@ -78,7 +77,10 @@ class UsersListAndSearchViewModel @Inject constructor(
         if (stateOnLoadStart.isLoading || stateOnLoadStart.searchName.isBlank()) return
         viewModelScope.launch(dispatchers.io) {
             _state.update { state ->
-                state.copy(isLoading = true)
+                state.copy(
+                    isLoading = true,
+                    performedSearch = true
+                )
             }
 
             val result = getUserListByName(stateOnLoadStart.searchName)
@@ -100,7 +102,8 @@ class UsersListAndSearchViewModel @Inject constructor(
 
             is Resource.Error -> state.copy(
                 isLoading = false,
-                error = result.throwable.message ?: "Unknown error please try again!"
+                error = (result.throwable as? GithubRequestException)?.error?.message
+                    ?: R.string.defaul_error_message
             )
         }
     }

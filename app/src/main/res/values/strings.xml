@@ -5,4 +5,18 @@
     <string name="reset">RESET</string>
     <string name="search_user_placeholder">Search user</string>
     <string name="search">Search</string>
+
+    <string name="error_service_unavailable">Oops, an error happened. Please try again later.</string>
+    <string name="client_error">Oops, an error happened. Please contact the support.</string>
+    <string name="server_error">Oops, an error happened. Please try again later.</string>
+    <string name="unknown_error">"Oops, an unknown error happened. "</string>
+    <string name="navigate_back">Navigate back</string>
+    <string name="copied_to_clipboard">Copied to clipboard</string>
+    <string name="copy_url">Copy url</string>
+    <string name="open_url">Open url</string>
+    <string name="bio">"Bio: %1$s"</string>
+    <string name="retry">RETRY</string>
+    <string name="created_at">"Created: %1$s"</string>
+    <string name="updated_at">"Updated: %1$s"</string>
+    <string name="defaul_error_message">Unknown error please try again!</string>
 </resources>

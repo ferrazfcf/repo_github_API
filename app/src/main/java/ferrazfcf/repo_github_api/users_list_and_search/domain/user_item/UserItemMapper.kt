@@ -5,12 +5,12 @@ import ferrazfcf.repo_github_api.users_list_and_search.data.user_item.UserItemDT
 
 fun UserItemDTO.toUserItem(): UserItem? {
     return runCatching {
-        requireNotNull(name) { "User name should not be null" }
+        requireNotNull(login) { "User login should not be null" }
         UserItem(
-            name = name,
+            login = login,
             avatar = avatar
         )
     }.onFailure {
-        Log.e("PARSER_ERROR", "UserItem", it)
+        Log.e("MAPPER_ERROR", "UserItem", it)
     }.getOrNull()
 }

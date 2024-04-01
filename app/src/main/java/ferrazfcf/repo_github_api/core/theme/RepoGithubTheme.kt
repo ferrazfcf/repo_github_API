@@ -1,4 +1,4 @@
-package ferrazfcf.repo_github_api
+package ferrazfcf.repo_github_api.core.theme
 
 import android.app.Activity
 import android.os.Build
@@ -12,8 +12,6 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
-import ferrazfcf.repo_github_api.core.theme.darkColors
-import ferrazfcf.repo_github_api.core.theme.lightColors
 import ferrazfcf.repo_github_api.core.theme.shapes
 import ferrazfcf.repo_github_api.core.theme.typography
 

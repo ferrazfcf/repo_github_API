@@ -5,6 +5,6 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class UserItemDTO(
-    @Json(name = "login") val name: String?,
+    @Json(name = "login") val login: String?,
     @Json(name = "avatar_url") val avatar: String?
 )
