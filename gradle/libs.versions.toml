@@ -1,6 +1,6 @@
 [versions]
 agp = "8.3.1"
-kotlin = "1.9.20"
+kotlin = "1.9.22"
 coreKtx = "1.12.0"
 junit = "4.13.2"
 junitVersion = "1.1.5"
@@ -14,8 +14,10 @@ hilt-android = "2.49"
 lifecycleRuntimeCompose = "2.7.0"
 moshiVersion = "1.15.0"
 retrofitVersion = "2.9.0"
-compose-coil-version = "2.4.0"
+composeCoilVersion = "2.4.0"
 constraintlayoutComposeVersion = "1.0.1"
+kotlinxDatetimeVersion = "0.6.0-RC.2"
+okHttpVersion = "4.11.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -43,15 +45,18 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 
-compose-coil = { module = "io.coil-kt:coil-compose", version.ref = "compose-coil-version" }
+compose-coil = { module = "io.coil-kt:coil-compose", version.ref = "composeCoilVersion" }
 compose-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "constraintlayoutComposeVersion" }
-
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt-android" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt-android" }
 hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hilt" }
+
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetimeVersion" }
+
+logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okHttpVersion" }
 
 moshi = { group = "com.squareup.moshi", name = "moshi", version.ref = "moshiVersion" }
 moshi-kotlin = { group = "com.squareup.moshi", name = "moshi-kotlin", version.ref = "moshiVersion" }

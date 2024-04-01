@@ -4,8 +4,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import ferrazfcf.repo_github_api.core.util.ActualCoroutineDispatchers
-import ferrazfcf.repo_github_api.core.util.CoroutineDispatchers
+import ferrazfcf.repo_github_api.core.util.coroutines.ActualCoroutineDispatchers
+import ferrazfcf.repo_github_api.core.util.coroutines.CoroutineDispatchers
 
 @Module
 @InstallIn(SingletonComponent::class)

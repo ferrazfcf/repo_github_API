@@ -23,8 +23,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -33,14 +35,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import ferrazfcf.repo_github_api.R
-import ferrazfcf.repo_github_api.RepoGithubTheme
 import ferrazfcf.repo_github_api.core.theme.LightBlue
-import ferrazfcf.repo_github_api.users_list_and_search.domain.user_item.UserItem
+import ferrazfcf.repo_github_api.core.theme.RepoGithubTheme
 import ferrazfcf.repo_github_api.users_list_and_search.presentation.component.UserListItem
+import ferrazfcf.repo_github_api.users_list_and_search.presentation.preview.UsersListAndSearchParams
 
 @Composable
 fun UsersListAndSearch(
@@ -49,9 +54,27 @@ fun UsersListAndSearch(
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(state.error) {
-        state.error?.let { error ->
-            snackbarHostState.showSnackbar(error)
+    val error = state.error?.let { stringResource(id = it) }
+
+    LaunchedEffect(error) {
+        error?.let { error ->
+            snackbarHostState.showSnackbar(
+                message = error,
+                actionLabel = "Retry",
+                duration = SnackbarDuration.Indefinite
+            ).also { result ->
+                when(result) {
+                    SnackbarResult.ActionPerformed -> {
+                        if (state.performedSearch) {
+                            onEvent(UsersListAndSearchEvent.SearchUsersByName)
+                        } else {
+                            onEvent(UsersListAndSearchEvent.LoadUsers)
+                        }
+                    }
+
+                    SnackbarResult.Dismissed -> onEvent(UsersListAndSearchEvent.OnErrorSeen)
+                }
+            }
             onEvent(UsersListAndSearchEvent.OnErrorSeen)
         }
     }
@@ -112,6 +135,8 @@ private fun SearchBar(
     state: UsersListAndSearchState,
     onEvent: (UsersListAndSearchEvent) -> Unit
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -132,6 +157,7 @@ private fun SearchBar(
             trailingIcon = {
                 IconButton(
                     onClick = {
+                        keyboardController?.hide()
                         onEvent(UsersListAndSearchEvent.SearchUsersByName)
                     }
                 ) {
@@ -156,18 +182,22 @@ private fun SearchBar(
             Text(
                 text = stringResource(id = R.string.users_list_header),
                 style = MaterialTheme.typography.headlineLarge,
-                color = LightBlue
+                color = LightBlue,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
-            Button(
-                onClick = {
-                    onEvent(UsersListAndSearchEvent.ResetUsers)
+            if (state.performedSearch) {
+                Button(
+                    onClick = {
+                        onEvent(UsersListAndSearchEvent.ResetUsers)
+                    }
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.reset),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
                 }
-            ) {
-                Text(
-                    text = stringResource(id = R.string.reset),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
             }
         }
     }
@@ -175,29 +205,11 @@ private fun SearchBar(
 
 @Preview
 @Composable
-private fun UsersListAndSearchPreview() {
+private fun UsersListAndSearchPreview(
+    @PreviewParameter(UsersListAndSearchParams::class)
+    state: UsersListAndSearchState
+) {
     RepoGithubTheme {
-        val userItem = UserItem(
-            name = "octocat",
-            avatar = "https://github.com/images/error/octocat_happy.gif"
-        )
-        val state = UsersListAndSearchState(
-            isLoading = true,
-            searchName = "ferrazfcf",
-            users = listOf(
-                userItem,
-                userItem,
-                userItem,
-                userItem,
-                userItem,
-                userItem,
-                userItem,
-                userItem,
-                userItem,
-                userItem,
-                userItem
-            )
-        )
         UsersListAndSearch(
             state = state,
             onEvent = { }

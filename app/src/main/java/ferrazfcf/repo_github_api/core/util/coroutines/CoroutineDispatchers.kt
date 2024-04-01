@@ -1,4 +1,4 @@
-package ferrazfcf.repo_github_api.core.util
+package ferrazfcf.repo_github_api.core.util.coroutines
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.MainCoroutineDispatcher
